@@ -7,22 +7,30 @@ import { FeaturesModule } from '../features/features.module';
 import { BotUpdate } from './bot.update';
 
 /**
- * Telegram bot moduli — polling mode.
+ * Telegram bot moduli — mahalliy kompyuterda polling, Vercel'da webhook mode.
  */
 @Module({
   imports: [
     TelegrafModule.forRootAsync({
       imports: [AppConfigModule],
       inject: [AppConfigService],
-      useFactory: (config: AppConfigService) => ({
-        token: config.botToken,
-        launchOptions: {
-          allowedUpdates: [
-            'message',
-            'callback_query',
-          ],
-        },
-      }),
+      useFactory: (config: AppConfigService) => {
+        const isVercel = !!process.env.VERCEL || config.nodeEnv === 'production';
+        const domain = process.env.WEBHOOK_DOMAIN || (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : ''));
+        
+        return {
+          token: config.botToken,
+          launchOptions: isVercel && domain ? {
+            webhook: {
+              domain,
+              path: '/api/index',
+            },
+            allowedUpdates: ['message', 'callback_query'],
+          } : {
+            allowedUpdates: ['message', 'callback_query'],
+          },
+        };
+      },
     }),
     FeaturesModule,
   ],
