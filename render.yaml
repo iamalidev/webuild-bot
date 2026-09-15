@@ -1,0 +1,40 @@
+databases:
+  - name: webuild-bot-db
+    databaseName: webuild_bot
+    user: root
+    plan: free
+
+services:
+  - type: web
+    name: webuild-bot
+    env: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm run start:prod
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: webuild-bot-db
+          property: connectionString
+      - key: DATABASE_SCHEMA
+        value: public
+      
+      # Quyidagi o'zgaruvchilarni Render Dashboard'da (Environment qismida) o'zingiz kiritishingiz kerak bo'ladi
+      - key: BOT_TOKEN
+        sync: false
+      - key: OWNER_IDS
+        sync: false
+      - key: COURSE_TITLE
+        sync: false
+      - key: COURSE_DESCRIPTION
+        sync: false
+      - key: COURSE_PRICE
+        sync: false
+      - key: CARD_NUMBER
+        sync: false
+      - key: CARD_HOLDER
+        sync: false
+      - key: COURSE_CHANNEL_ID
+        sync: false
