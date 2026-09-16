@@ -29,6 +29,14 @@ async function bootstrap() {
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  const server = await bootstrap();
-  server(req, res);
+  try {
+    const server = await bootstrap();
+    server(req, res);
+  } catch (err) {
+    console.error('Fatal Bootstrap Error:', err);
+    res.status(500).json({ 
+      error: 'Internal Server Error', 
+      details: err instanceof Error ? err.message : String(err)
+    });
+  }
 }

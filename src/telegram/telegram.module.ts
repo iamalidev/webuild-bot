@@ -16,7 +16,10 @@ import { BotUpdate } from './bot.update';
       inject: [AppConfigService],
       useFactory: (config: AppConfigService) => {
         const isVercel = !!process.env.VERCEL || config.isProduction;
-        const domain = process.env.WEBHOOK_DOMAIN || (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : ''));
+        const domain = process.env.WEBHOOK_DOMAIN || 
+          (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : 
+          (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'https://webuild-bot.vercel.app'));
+        
         
         return {
           token: config.botToken,
