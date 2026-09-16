@@ -27,6 +27,7 @@
     "@nestjs/cli": "^11.0.0",
     "@nestjs/schematics": "^11.0.0",
     "@telegraf/types": "^7.1.0",
+    "@types/express": "^5.0.6",
     "@types/node": "^22.10.0",
     "@types/pg": "^8.21.0",
     "@vercel/node": "^13.0.1",

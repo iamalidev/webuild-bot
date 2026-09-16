@@ -15,7 +15,7 @@ import { BotUpdate } from './bot.update';
       imports: [AppConfigModule],
       inject: [AppConfigService],
       useFactory: (config: AppConfigService) => {
-        const isVercel = !!process.env.VERCEL || config.nodeEnv === 'production';
+        const isVercel = !!process.env.VERCEL || config.isProduction;
         const domain = process.env.WEBHOOK_DOMAIN || (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : ''));
         
         return {
