@@ -5,6 +5,7 @@ import { AppConfigModule } from '../config/config.module';
 import { AppConfigService } from '../config/app-config.service';
 import { FeaturesModule } from '../features/features.module';
 import { BotUpdate } from './bot.update';
+import { WebhookController } from './webhook.controller';
 
 /**
  * Telegram bot moduli — mahalliy kompyuterda polling, Vercel'da webhook mode.
@@ -37,6 +38,8 @@ import { BotUpdate } from './bot.update';
     }),
     FeaturesModule,
   ],
+  controllers: [WebhookController],
   providers: [BotUpdate],
 })
 export class TelegramModule {}
+
