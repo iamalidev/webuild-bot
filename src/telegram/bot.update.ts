@@ -58,9 +58,9 @@ export class BotUpdate {
       if (replyTo) {
         let targetUserId: number | undefined;
         if ('forward_from' in replyTo && replyTo.forward_from) {
-          targetUserId = replyTo.forward_from.id;
-        } else if ('text' in replyTo && replyTo.text) {
-          const match = replyTo.text.match(/ID:\s*(\d+)/);
+          targetUserId = (replyTo as any).forward_from.id;
+        } else if ('text' in replyTo && (replyTo as any).text) {
+          const match = (replyTo as any).text.match(/ID:\s*(\d+)/);
           if (match) targetUserId = Number(match[1]);
         }
 
@@ -241,11 +241,11 @@ export class BotUpdate {
 
         // 1. Agar xabar forward qilingan bo'lsa (va user privacy orqali yashirmagan bo'lsa)
         if ('forward_from' in replyTo && replyTo.forward_from) {
-          targetUserId = replyTo.forward_from.id;
+          targetUserId = (replyTo as any).forward_from.id;
         } 
         // 2. Yoki admin botning o'zi yuborgan "💬 Yangi xabar ... (ID: 12345)" xabariga javob bersa
-        else if ('text' in replyTo && replyTo.text) {
-          const match = replyTo.text.match(/ID:\s*(\d+)/);
+        else if ('text' in replyTo && (replyTo as any).text) {
+          const match = (replyTo as any).text.match(/ID:\s*(\d+)/);
           if (match) targetUserId = Number(match[1]);
         }
 
