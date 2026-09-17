@@ -28,16 +28,23 @@ export class BotUpdate {
 
     this.logger.log(`/start — ${user.username ?? user.first_name} (${user.id})`);
 
-    // Foydalanuvchini bazaga yozish
-    await this.course.ensureUser(
-      user.id,
-      user.username,
-      user.first_name,
-      user.last_name,
-    );
+    try {
+      // Foydalanuvchini bazaga yozish
+      await this.course.ensureUser(
+        user.id,
+        user.username,
+        user.first_name,
+        user.last_name,
+      );
 
-    // Kurs ma'lumotini ko'rsatish
-    await this.course.showCourseInfo(ctx.chat!.id);
+      // Kurs ma'lumotini ko'rsatish
+      await this.course.showCourseInfo(ctx.chat!.id);
+    } catch (e) {
+      this.logger.error(`/start xatosi: ${(e as Error).message}`);
+      try {
+        await ctx.reply('⚠️ Xatolik yuz berdi. Iltimos, qayta /start bosing.');
+      } catch { /* ignore */ }
+    }
   }
 
   // ─── /help ───────────────────────────────────────────────────────

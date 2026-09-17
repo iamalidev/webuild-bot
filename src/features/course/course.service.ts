@@ -51,43 +51,60 @@ export class CourseService {
     
     const keyboard = {
       inline_keyboard: [
-        [{ text: '💳 Sotib olish', callback_data: 'how_to_pay' }],
-        [{ text: '👨‍💻 Admin bilan aloqa', callback_data: 'contact_admin' }],
+        [{ text: '\ud83d\udcb3 Sotib olish', callback_data: 'how_to_pay' }],
+        [{ text: '\ud83d\udc68\u200d\ud83d\udcbb Admin bilan aloqa', callback_data: 'contact_admin' }],
       ],
     };
 
     const photo = this.config.coursePhoto || 'https://raw.githubusercontent.com/iamalidev/webuild-bot/main/src/assets/images/webuild-banner.jpeg';
 
-    await this.bot.telegram.sendPhoto(chatId, photo, {
-      caption: text,
-      parse_mode: 'HTML',
-      reply_markup: keyboard,
-    });
+    try {
+      await this.bot.telegram.sendPhoto(chatId, photo, {
+        caption: text,
+        parse_mode: 'HTML',
+        reply_markup: keyboard,
+      });
+    } catch (e) {
+      this.logger.error(`sendPhoto xato: ${(e as Error).message}`);
+      // Rasm bilan yuborib bo'lmasa — faqat matn yuboramiz
+      try {
+        await this.bot.telegram.sendMessage(chatId, text, {
+          parse_mode: 'HTML',
+          reply_markup: keyboard,
+        });
+      } catch (e2) {
+        this.logger.error(`sendMessage ham xato: ${(e2 as Error).message}`);
+        // HTML parse xatosi bo'lsa — oddiy matn yuboramiz
+        await this.bot.telegram.sendMessage(chatId, text.replace(/<[^>]*>/g, ''), {
+          reply_markup: keyboard,
+        });
+      }
+    }
   }
 
   private buildCourseText(): string {
     return [
-      '🚀 Webuild — AI yordamida zamonaviy web saytlar yaratish va ularni mijozlarga sotishni o‘rganadigan onlayn kurs.',
+      '\ud83d\ude80 Webuild \u2014 AI yordamida zamonaviy web saytlar yaratish va ularni mijozlarga sotishni o\u2018rganadigan onlayn kurs.',
       '',
-      'Agar siz frontend bilsangiz yoki umuman web developmentga kirishni xohlasangiz, kurs davomida shunchaki video ko‘rib o‘tirmaysiz — real loyiha yaratishni o‘rganasiz.',
+      'Agar siz frontend bilsangiz yoki umuman web developmentga kirishni xohlasangiz, kurs davomida shunchaki video ko\u2018rib o\u2018tirmaysiz \u2014 real loyiha yaratishni o\u2018rganasiz.',
       '',
       'Kursda:',
-      '🎨 3D animatsiyali zamonaviy web saytlar yaratish',
-      '🤖 AI vositalaridan foydalanib sayt yaratish jarayonini tezlashtirish',
-      '📈 18 oylik Google Pro tarifini qanday qilib olish',
-      '💼 Tayyor saytni mijozga taklif qilish va sotish',
-      '🔎 Mijozlarni qayerdan topish va ularga qanday yozish',
-      '🌐 Webuild Community\'ga bepul kirish',
-      '💬 24/7 savol-javob va yordam',
+      '\ud83c\udfa8 3D animatsiyali zamonaviy web saytlar yaratish',
+      '\ud83e\udd16 AI vositalaridan foydalanib sayt yaratish jarayonini tezlashtirish',
+      '\ud83d\udcc8 18 oylik Google Pro tarifini qanday qilib olish',
+      '\ud83d\udcbc Tayyor saytni mijozga taklif qilish va sotish',
+      '\ud83d\udd0e Mijozlarni qayerdan topish va ularga qanday yozish',
+      '\ud83c\udf10 Webuild Community\'ga bepul kirish',
+      '\ud83d\udcac 24/7 savol-javob va yordam',
       '',
-      'Eng muhimi — kursni tugatgandan keyin sizda faqat bilim emas, mijozga ko‘rsatish mumkin bo‘lgan real web loyiha bo‘ladi.',
+      'Eng muhimi \u2014 kursni tugatgandan keyin sizda faqat bilim emas, mijozga ko\u2018rsatish mumkin bo\u2018lgan real web loyiha bo\u2018ladi.',
       '',
-      '💰 Kurs narxi: <del>423.000 so‘m</del>',
-      '🔥 Hozirgi aksiya: <b>249.000 so‘m</b>',
+      '\ud83d\udcb0 Kurs narxi: <s>423.000 so\u2018m</s>',
+      '\ud83d\udd25 Hozirgi aksiya: <b>249.000 so\u2018m</b>',
       '',
-      'Agar web sayt yaratishni shunchaki o‘rganish emas, uni xizmatga aylantirib pul ishlash maqsadingiz bo‘lsa — Webuild aynan shu jarayonni ko‘rsatadi. To‘lovdan so‘ng chekni yuborasiz va kursga kirish havolasini olasiz.',
+      'Agar web sayt yaratishni shunchaki o\u2018rganish emas, uni xizmatga aylantirib pul ishlash maqsadingiz bo\u2018lsa \u2014 Webuild aynan shu jarayonni ko\u2018rsatadi. To\u2018lovdan so\u2018ng chekni yuborasiz va kursga kirish havolasini olasiz.',
       '',
-      '🚀 <i>Keyingi levelni boshlaymiz.</i>'
+      '\ud83d\ude80 <i>Keyingi levelni boshlaymiz.</i>',
     ].join('\n');
   }
 
