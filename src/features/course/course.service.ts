@@ -16,7 +16,7 @@ export class CourseService {
     @InjectBot() private readonly bot: Telegraf<BotContext>,
     private readonly config: AppConfigService,
     private readonly db: PostgresService,
-  ) {}
+  ) { }
 
   /**
    * Foydalanuvchini bazaga yozish (agar yo'q bo'lsa).
@@ -48,7 +48,7 @@ export class CourseService {
    */
   async showCourseInfo(chatId: number): Promise<void> {
     const text = this.buildCourseText();
-    
+
     const keyboard = {
       inline_keyboard: [
         [{ text: '\ud83d\udcb3 Sotib olish', callback_data: 'how_to_pay' }],
@@ -86,8 +86,6 @@ export class CourseService {
     return [
       '\ud83d\ude80 Webuild \u2014 AI yordamida zamonaviy web saytlar yaratish va ularni mijozlarga sotishni o\u2018rganadigan onlayn kurs.',
       '',
-      'Agar siz frontend bilsangiz yoki umuman web developmentga kirishni xohlasangiz, kurs davomida shunchaki video ko\u2018rib o\u2018tirmaysiz \u2014 real loyiha yaratishni o\u2018rganasiz.',
-      '',
       'Kursda:',
       '\ud83c\udfa8 3D animatsiyali zamonaviy web saytlar yaratish',
       '\ud83e\udd16 AI vositalaridan foydalanib sayt yaratish jarayonini tezlashtirish',
@@ -96,8 +94,6 @@ export class CourseService {
       '\ud83d\udd0e Mijozlarni qayerdan topish va ularga qanday yozish',
       '\ud83c\udf10 Webuild Community\'ga bepul kirish',
       '\ud83d\udcac 24/7 savol-javob va yordam',
-      '',
-      'Eng muhimi \u2014 kursni tugatgandan keyin sizda faqat bilim emas, mijozga ko\u2018rsatish mumkin bo\u2018lgan real web loyiha bo\u2018ladi.',
       '',
       '\ud83d\udcb0 Kurs narxi: <s>423.000 so\u2018m</s>',
       '\ud83d\udd25 Hozirgi aksiya: <b>249.000 so\u2018m</b>',
