@@ -56,7 +56,7 @@ export class CourseService {
       ],
     };
 
-    const photo = this.config.coursePhoto || { source: 'src/assets/images/webuild-banner.jpeg' };
+    const photo = this.config.coursePhoto || 'https://raw.githubusercontent.com/iamalidev/webuild-bot/main/src/assets/images/webuild-banner.jpeg';
 
     await this.bot.telegram.sendPhoto(chatId, photo, {
       caption: text,
