@@ -52,7 +52,31 @@ export class BotUpdate {
     const user = ctx.from;
     if (!user || !ctx.message || !('photo' in ctx.message)) return;
 
-    // Eng katta o'lchamdagi rasmni olish
+    // Agar admin rasm yuborayotgan bo'lsa
+    if (this.config.isOwner(user.id)) {
+      const replyTo = ctx.message.reply_to_message;
+      if (replyTo) {
+        let targetUserId: number | undefined;
+        if ('forward_from' in replyTo && replyTo.forward_from) {
+          targetUserId = replyTo.forward_from.id;
+        } else if ('text' in replyTo && replyTo.text) {
+          const match = replyTo.text.match(/ID:\s*(\d+)/);
+          if (match) targetUserId = Number(match[1]);
+        }
+
+        if (targetUserId) {
+          try {
+            await ctx.copyMessage(targetUserId);
+            await ctx.reply('✅ Rasm (javob) foydalanuvchiga yuborildi.');
+          } catch (e) {
+            await ctx.reply(`❌ Foydalanuvchiga xabar yuborishda xatolik: ${(e as Error).message}`);
+          }
+        }
+      }
+      return; // Admin chek yubormaydi deb hisoblaymiz
+    }
+
+    // Oddiy user rasm yuborsa — chek rasmi
     const photos = ctx.message.photo;
     const bestPhoto = photos[photos.length - 1];
 
@@ -209,6 +233,32 @@ export class BotUpdate {
         user.username,
         user.first_name,
       );
+    } else {
+      // Admin foydalanuvchining xabariga "reply" qilib javob yozganda
+      const replyTo = ctx.message.reply_to_message;
+      if (replyTo) {
+        let targetUserId: number | undefined;
+
+        // 1. Agar xabar forward qilingan bo'lsa (va user privacy orqali yashirmagan bo'lsa)
+        if ('forward_from' in replyTo && replyTo.forward_from) {
+          targetUserId = replyTo.forward_from.id;
+        } 
+        // 2. Yoki admin botning o'zi yuborgan "💬 Yangi xabar ... (ID: 12345)" xabariga javob bersa
+        else if ('text' in replyTo && replyTo.text) {
+          const match = replyTo.text.match(/ID:\s*(\d+)/);
+          if (match) targetUserId = Number(match[1]);
+        }
+
+        if (targetUserId) {
+          try {
+            // Adminning xabarini (matn/rasm/h.k) userga nusxalab yuborish
+            await ctx.copyMessage(targetUserId);
+            await ctx.reply('✅ Javobingiz foydalanuvchiga yuborildi.');
+          } catch (e) {
+            await ctx.reply(`❌ Foydalanuvchiga xabar yuborishda xatolik: ${(e as Error).message}`);
+          }
+        }
+      }
     }
   }
 

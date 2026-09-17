@@ -48,48 +48,46 @@ export class CourseService {
    */
   async showCourseInfo(chatId: number): Promise<void> {
     const text = this.buildCourseText();
+    
     const keyboard = {
       inline_keyboard: [
-        [{ text: '📸 Chek yuborish haqida', callback_data: 'how_to_pay' }],
-        [{ text: '💬 Savollar bormi?', callback_data: 'contact_admin' }],
+        [{ text: '💳 Sotib olish', callback_data: 'how_to_pay' }],
+        [{ text: '👨‍💻 Admin bilan aloqa', callback_data: 'contact_admin' }],
       ],
     };
 
-    const photo = this.config.coursePhoto;
+    const photo = this.config.coursePhoto || { source: 'src/assets/images/webuild-banner.jpeg' };
 
-    if (photo) {
-      await this.bot.telegram.sendPhoto(chatId, photo, {
-        caption: text,
-        parse_mode: 'HTML',
-        reply_markup: keyboard,
-      });
-    } else {
-      await this.bot.telegram.sendMessage(chatId, text, {
-        parse_mode: 'HTML',
-        reply_markup: keyboard,
-      });
-    }
+    await this.bot.telegram.sendPhoto(chatId, photo, {
+      caption: text,
+      parse_mode: 'HTML',
+      reply_markup: keyboard,
+    });
   }
 
   private buildCourseText(): string {
     return [
-      `🎓 <b>${this.config.courseTitle}</b>`,
+      '🚀 Webuild — AI yordamida zamonaviy web saytlar yaratish va ularni mijozlarga sotishni o‘rganadigan onlayn kurs.',
       '',
-      `📚 ${this.config.courseDescription}`,
+      'Agar siz frontend bilsangiz yoki umuman web developmentga kirishni xohlasangiz, kurs davomida shunchaki video ko‘rib o‘tirmaysiz — real loyiha yaratishni o‘rganasiz.',
       '',
-      `💰 <b>Narxi: ${this.config.coursePrice}</b>`,
+      'Kursda:',
+      '🎨 3D animatsiyali zamonaviy web saytlar yaratish',
+      '🤖 AI vositalaridan foydalanib sayt yaratish jarayonini tezlashtirish',
+      '📈 18 oylik Google Pro tarifini qanday qilib olish',
+      '💼 Tayyor saytni mijozga taklif qilish va sotish',
+      '🔎 Mijozlarni qayerdan topish va ularga qanday yozish',
+      '🌐 Webuild Community\'ga bepul kirish',
+      '💬 24/7 savol-javob va yordam',
       '',
-      '━━━━━━━━━━━━━━━━━━━━━',
+      'Eng muhimi — kursni tugatgandan keyin sizda faqat bilim emas, mijozga ko‘rsatish mumkin bo‘lgan real web loyiha bo‘ladi.',
       '',
-      '💳 <b>To\'lov uchun:</b>',
-      `💳 Karta: <code>${this.config.cardNumber}</code>`,
-      `👤 Karta egasi: ${this.config.cardHolder}`,
+      '💰 Kurs narxi: <del>423.000 so‘m</del>',
+      '🔥 Hozirgi aksiya: <b>249.000 so‘m</b>',
       '',
-      '━━━━━━━━━━━━━━━━━━━━━',
+      'Agar web sayt yaratishni shunchaki o‘rganish emas, uni xizmatga aylantirib pul ishlash maqsadingiz bo‘lsa — Webuild aynan shu jarayonni ko‘rsatadi. To‘lovdan so‘ng chekni yuborasiz va kursga kirish havolasini olasiz.',
       '',
-      '✅ To\'lov qilganingizdan keyin <b>chek rasmini shu botga yuboring!</b>',
-      '',
-      '⏱ Admin tekshirib, tez orada kurs linkini yuboradi.',
+      '🚀 <i>Keyingi levelni boshlaymiz.</i>'
     ].join('\n');
   }
 
@@ -98,19 +96,13 @@ export class CourseService {
    */
   async showHowToPay(chatId: number): Promise<void> {
     const text = [
-      '📸 <b>Chek yuborish tartibi:</b>',
+      '💳 <b>To\'lov uchun:</b>',
+      `💳 Karta: <code>${this.config.cardNumber}</code>`,
+      `👤 Karta egasi: ${this.config.cardHolder}`,
       '',
-      '1️⃣ Yuqoridagi karta raqamiga to\'lov qiling',
-      `   💳 <code>${this.config.cardNumber}</code>`,
-      `   💰 ${this.config.coursePrice}`,
+      '✅ To\'lov qilganingizdan keyin chek rasmini shu botga yuboring!',
       '',
-      '2️⃣ To\'lov chekini <b>rasmga oling</b>',
-      '',
-      '3️⃣ Rasmni <b>shu botga yuboring</b>',
-      '',
-      '4️⃣ Admin tekshirib, kurs linkini yuboradi ✅',
-      '',
-      '⏱ Tekshirish odatda <b>1-24 soat</b> ichida amalga oshadi.',
+      '⏱️ Admin tekshirib, tez orada kurs linkini yuboradi.',
     ].join('\n');
 
     await this.bot.telegram.sendMessage(chatId, text, {
@@ -118,23 +110,8 @@ export class CourseService {
     });
   }
 
-  /**
-   * Admin bilan bog'lanish.
-   */
   async showContactAdmin(chatId: number): Promise<void> {
-    const ownerIds = this.config.ownerIds;
-    let text: string;
-
-    if (ownerIds.length > 0) {
-      text = [
-        '💬 <b>Savollaringiz bormi?</b>',
-        '',
-        'Shu botga xabaringizni yozing — admin tez orada javob beradi! 📩',
-      ].join('\n');
-    } else {
-      text = '💬 Savollaringiz bo\'lsa, shu botga yozing!';
-    }
-
+    const text = '💬 Adminga savollaringizni bering (shu yerga yozib yuboring):';
     await this.bot.telegram.sendMessage(chatId, text, {
       parse_mode: 'HTML',
     });
